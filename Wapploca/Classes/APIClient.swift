@@ -18,6 +18,10 @@ public class APIClient {
         case export
     }
     
+    private enum WapplocaResponseParam: String {
+        case lastUpdate = "last_update"
+    }
+    
     private var headers: Dictionary<String, String> {
         let token = WPLHelper.getCFSecurityToken()
         return ["X-CLOUDFRAMEWORK-SECURITY": token!]
@@ -27,7 +31,7 @@ public class APIClient {
         
     }
     
-    public func requestVersionDateOfLanguage(_ lang: String) {
+    public func requestVersionDateOfLanguage(_ lang: String, completionHandler: (versionDate: NSDate?, error: NSError?) -> ()) {
         assert(lang.characters.count == 2, "Language \(lang) should be a valid ISO Code of 2 characters length")
         
         let parameters = [WapplocaInputParam.lang.rawValue: lang,
@@ -38,9 +42,20 @@ public class APIClient {
         .responseJSON { response in
             switch response.result {
             case .Success:
-                print(response)
+                if let responseDict = response.result.value as? [String: AnyObject],
+                    langDate = responseDict[WapplocaResponseParam.lastUpdate.rawValue] as? String {
+                        let parser = Parser()
+                        let parsedDate = parser.parseDateFromString(langDate)
+                        completionHandler(versionDate: parsedDate, error: nil)
+                } else {
+                    let errorNoDate = NSError(domain: String(APIClient),
+                        code: 0,
+                        userInfo: [NSLocalizedDescriptionKey: "Could not parse version date"])
+                    completionHandler(versionDate: nil, error: errorNoDate)
+                }
+                
             case .Failure(let error):
-                print(error)
+                completionHandler(versionDate: nil, error: error)
             }
         }
         debugPrint(request)
