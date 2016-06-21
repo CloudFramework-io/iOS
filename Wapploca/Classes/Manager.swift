@@ -44,11 +44,22 @@ public class Manager {
     /// Language and Version Date
     private var languageVersion: (language: String?, versionDate: NSDate?)
     
+    /// Client used to call endpoints
+    private let apiClient = APIClient()
+    
     /// The language of the device
-    var deviceLanguage: String {
+    var deviceLanguageISOCode: String {
         let language = NSLocale.preferredLanguages().first!
         let index = language.startIndex.advancedBy(2)
         return language.substringToIndex(index)
+    }
+    
+    var currentLanguageISOCode: String? {
+        return languageVersionDict.first?.0
+    }
+    
+    public enum Notification {
+        public static let didChangeLanguageKey = "Manager.Notification.didChangeLanguage"
     }
     
 
@@ -71,22 +82,45 @@ public class Manager {
      
         - Parameter lang: The language to set
      */
-    public func setLanguage(_ lang: String) {
+    public func setLanguage(_ lang: String, completion completion: (() -> Void)?) {
         // If we are requesting same language as we currently have, check the version date
         if let currentLanguage = languageVersionDict.first?.0 where currentLanguage == lang {
-            let apiClient = APIClient()
             apiClient.requestVersionDateOfLanguage(lang) {
                 [weak self] (versionDate, error) in
                 
                 print("Checking version date of language \(lang)")
                 if let newDate = versionDate, oldDate = self?.languageVersion.versionDate
                 where newDate.compare(oldDate) == .OrderedDescending {
-                    self?.p_downloadLanguage(lang)
+                    self?.p_downloadLanguage(lang, completion: completion)
                 }
             }
         } else {
-            p_downloadLanguage(lang)
+            p_downloadLanguage(lang, completion: completion)
         }
+    }
+    
+    /**
+        Get the list of available languages
+     
+        - Returns: An array of Language objects
+     */
+    func getAvailableLanguages(completionHandler: ((languagesArray: [Language]) -> Void)) {
+        apiClient.requestLanguages { (languages, error) in
+            completionHandler(languagesArray: languages)
+        }
+    }
+    
+    public func translationForKey(_ key: String) -> String {
+        return dataController.fetchTranslationForKey(key)
+    }
+    
+    public func translationForKeyWithArguments(_ key: String, arguments: [String: String]) -> String {
+        let translation = translationForKey(key)
+        var finalTranslation = translation
+        for (key, value) in arguments {
+            finalTranslation = finalTranslation.stringByReplacingOccurrencesOfString(key, withString: value)
+        }
+        return finalTranslation
     }
     
     // MARK: Private methods
@@ -96,8 +130,7 @@ public class Manager {
      
         - Parameter lang: The language to download
      */
-    private func p_downloadLanguage(_ lang: String) {
-        let apiClient = APIClient()
+    private func p_downloadLanguage(_ lang: String, completion completion: (() -> Void)?) {
         apiClient.requestLanguage(lang) {
             [weak self] (responseObject, error) in
             
@@ -114,9 +147,25 @@ public class Manager {
             // Save tags
             self?.dataController.saveTags(responseTags)
             
-            // Test translation
-            print(self?.dataController.translationForKey("bloombees.mobileapp.welcome.message_welcome"))
+            // Send notification 
+            NSNotificationCenter.defaultCenter().postNotificationName(Notification.didChangeLanguageKey, object: nil)
+            
+            if let completionHandler = completion {
+                completionHandler()
+            }
         }
+    }
+}
+
+/**
+ * Show a selector to change the current language
+ */
+extension Manager {
+    public func showLanguageSelectorFromViewController(_ fromViewController: UIViewController) {
+        let languageVC = SelectLanguageViewController(fromViewController: fromViewController, selectedLanguage: nil)
+        languageVC.fromViewController = fromViewController
+        let languageNVC = UINavigationController(rootViewController: languageVC)
+        fromViewController.presentViewController(languageNVC, animated: true, completion: nil)
     }
 }
 

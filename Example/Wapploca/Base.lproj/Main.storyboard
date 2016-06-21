@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6211" systemVersion="14A298i" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="10116" systemVersion="15F34" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6204"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10085"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Wapploca_Example" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -15,11 +17,63 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="S1h-5U-Daw">
+                                <rect key="frame" x="20" y="218" width="560" height="164"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Welcome To Bloombees" textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8h3-I1-DgC">
+                                        <rect key="frame" x="0.0" y="0.0" width="540" height="36"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="30"/>
+                                        <color key="textColor" red="0.33543044328689575" green="0.33542037010192871" blue="0.33542609214782715" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k2h-RC-SJF">
+                                        <rect key="frame" x="91" y="120" width="378" height="44"/>
+                                        <color key="backgroundColor" red="0.20784313976764679" green="0.80784314870834351" blue="0.7764706015586853" alpha="1" colorSpace="calibratedRGB"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="46" id="G7q-bk-8SH"/>
+                                            <constraint firstAttribute="height" constant="44" id="v56-iH-NHM"/>
+                                        </constraints>
+                                        <state key="normal" title="Change Language">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <variation key="default">
+                                            <mask key="constraints">
+                                                <exclude reference="G7q-bk-8SH"/>
+                                            </mask>
+                                        </variation>
+                                        <connections>
+                                            <action selector="handleTapChangeButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="BXo-0J-b1w"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="8h3-I1-DgC" secondAttribute="trailing" constant="20" id="F4T-Q4-EKk"/>
+                                    <constraint firstItem="8h3-I1-DgC" firstAttribute="top" secondItem="S1h-5U-Daw" secondAttribute="top" id="YAG-uG-98U"/>
+                                    <constraint firstAttribute="bottom" secondItem="k2h-RC-SJF" secondAttribute="bottom" id="eYv-ey-ykD"/>
+                                    <constraint firstItem="k2h-RC-SJF" firstAttribute="centerX" secondItem="S1h-5U-Daw" secondAttribute="centerX" id="imU-7G-QRb"/>
+                                    <constraint firstItem="8h3-I1-DgC" firstAttribute="leading" secondItem="S1h-5U-Daw" secondAttribute="leading" id="kbG-Bj-Pll"/>
+                                    <constraint firstItem="k2h-RC-SJF" firstAttribute="width" secondItem="8h3-I1-DgC" secondAttribute="width" multiplier="0.7" id="lwv-W0-x1A"/>
+                                    <constraint firstItem="k2h-RC-SJF" firstAttribute="top" secondItem="8h3-I1-DgC" secondAttribute="bottom" constant="84" id="tfE-Fp-Sqm"/>
+                                </constraints>
+                            </view>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="S1h-5U-Daw" firstAttribute="centerY" secondItem="kh9-bI-dsS" secondAttribute="centerY" id="08k-Ih-paF"/>
+                            <constraint firstAttribute="trailing" secondItem="S1h-5U-Daw" secondAttribute="trailing" constant="20" id="Q4M-1U-9Ta"/>
+                            <constraint firstItem="S1h-5U-Daw" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" constant="20" id="Vcp-mr-gyb"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="changeButton" destination="k2h-RC-SJF" id="qPd-as-bf3"/>
+                        <outlet property="messageLabel" destination="8h3-I1-DgC" id="lAu-HJ-890"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
+            <point key="canvasLocation" x="537" y="440"/>
         </scene>
     </scenes>
 </document>

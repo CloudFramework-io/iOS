@@ -74,9 +74,9 @@ class DataController {
         }
     }
     
-    public func translationForKey(_ key: String) -> String {
+    func fetchTranslationForKey(_ key: String) -> String {
         var translationFetch = NSFetchRequest(entityName: DataController.entityTagName)
-        translationFetch.predicate = NSPredicate(format: "name contains[cd] %@", key)
+        translationFetch.predicate = NSPredicate(format: "name like[cd] %@", key)
         do {
             let fetchedTags = try managedObjectContext.executeFetchRequest(translationFetch) as? [TagMO]
             guard fetchedTags?.count > 0 else {
@@ -94,16 +94,7 @@ class DataController {
         }
     }
     
-    public func translationForKeyWithArguments(_ key: String, arguments: [String: String]) -> String {
-        let translation = translationForKey(key)
-        var finalTranslation = translation
-        for (key, value) in arguments {
-            finalTranslation = finalTranslation.stringByReplacingOccurrencesOfString(key, withString: value)
-        }
-        return finalTranslation
-    }
-    
-    public func saveTags(tagsDict: [String: String]) {
+    func saveTags(tagsDict: [String: String]) {
         let entityDescription = NSEntityDescription.entityForName(DataController.entityTagName, inManagedObjectContext: managedObjectContext)
         for (key, value) in tagsDict {
             let tag = TagMO(entity: entityDescription!, insertIntoManagedObjectContext: managedObjectContext)
